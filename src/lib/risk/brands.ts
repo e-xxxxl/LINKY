@@ -1,0 +1,30 @@
+// Frequently-impersonated brands used to catch lookalike domains such as
+// "paypa1-secure.com" or "amaz0n-support.net". This is a heuristic, not an
+// exhaustive trademark database.
+export const WATCHED_BRANDS = [
+  "paypal",
+  "google",
+  "apple",
+  "microsoft",
+  "amazon",
+  "netflix",
+  "facebook",
+  "instagram",
+  "whatsapp",
+  "coinbase",
+  "binance",
+  "chase",
+  "wellsfargo",
+  "bankofamerica",
+  "americanexpress",
+  "dhl",
+  "fedex",
+  "ups",
+  "usps",
+  "linkedin",
+  "outlook",
+  "office365",
+  "adobe",
+  "steam",
+  "spotify",
+];

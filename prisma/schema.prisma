@@ -1,0 +1,44 @@
+// LINKY data model. Postgres (Supabase).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Scan {
+  id            String   @id @default(cuid())
+  sessionId     String
+  originalUrl   String
+  normalizedUrl String
+  host          String
+  riskLevel     String
+  riskScore     Int
+  summary       String
+  reasons       String // JSON string array
+  signals       String // JSON ScanSignal[]
+  redirectChain String // JSON RedirectHop[]
+  domain        String // JSON DomainInfo
+  reputation    String // JSON ReputationResult[]
+  createdAt     DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  name       String
+  avatarUrl  String?
+  rating     Int
+  reviewText String
+  reason     String?
+  status     String   @default("pending") // pending | approved | rejected
+  isDemo     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([status])
+}
