@@ -30,7 +30,7 @@ export function ShieldCheckIllustration({ color }: { color: string }) {
 }
 
 /** Ported from scan_report_high_risk_2/code.html. Used for Suspicious,
- * High Risk and Malicious — `color` carries the risk-specific tint. */
+ * High Risk and Malicious, `color` carries the risk-specific tint. */
 export function BrokenLinkWarningIllustration({ color }: { color: string }) {
   return (
     <div className="relative mb-space-xs flex h-24 w-24 items-center justify-center">

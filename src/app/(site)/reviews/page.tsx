@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Reviews",
-  description: "What people are saying about LINKY, moderated before publishing.",
+  description: "What people are saying about LINKY, the plain English link safety scanner.",
 };
 
 async function getApprovedReviews(): Promise<PublicReview[]> {
@@ -21,7 +21,7 @@ async function getApprovedReviews(): Promise<PublicReview[]> {
   return reviews.map((r) => ({
     id: r.id,
     name: r.name,
-    avatarUrl: r.avatarUrl,
+    avatarSeed: r.avatarSeed,
     rating: r.rating,
     reviewText: r.reviewText,
     reason: r.reason,
@@ -38,7 +38,7 @@ export default async function ReviewsPage() {
       <div className="flex flex-col gap-space-xs">
         <h1 className="font-display text-headline-md tracking-tight text-black">LINKY review wall</h1>
         <p className="text-body-sm leading-relaxed text-ink-muted">
-          Real reviews from people who&rsquo;ve used LINKY, published after moderation.
+          What people say after checking a link with LINKY.
         </p>
       </div>
 

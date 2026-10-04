@@ -1,4 +1,4 @@
-/** Ported verbatim from stitch_linky_url_safety_scanner/linky_scanning —
+/** Ported verbatim from stitch_linky_url_safety_scanner/linky_scanning,
  * the concentric dashed rings + scattered marks around a magnifying-glass
  * mark, shown while a scan is in flight. */
 export function ScanningIllustration() {

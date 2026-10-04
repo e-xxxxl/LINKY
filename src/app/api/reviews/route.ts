@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { checkRateLimit, getClientKey } from "@/lib/rateLimit";
 import { reviewSubmitSchema } from "@/lib/validation";
+import { anonymousName } from "@/lib/avatar";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export async function GET() {
     reviews: reviews.map((r) => ({
       id: r.id,
       name: r.name,
-      avatarUrl: r.avatarUrl,
+      avatarSeed: r.avatarSeed,
       rating: r.rating,
       reviewText: r.reviewText,
       reason: r.reason,
@@ -46,19 +47,22 @@ export async function POST(request: Request) {
   const parsed = reviewSubmitSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Please check your review. Name and review text are required." },
+      { error: "Add a name (or stay anonymous) and write your review." },
       { status: 400 },
     );
   }
 
+  const { anonymous, avatarSeed, name } = parsed.data;
+
   const review = await prisma.review.create({
     data: {
-      name: parsed.data.name,
-      avatarUrl: parsed.data.avatarUrl || null,
+      name: anonymous ? anonymousName(avatarSeed) : (name as string),
+      avatarSeed,
       rating: parsed.data.rating,
       reviewText: parsed.data.reviewText,
       reason: parsed.data.reason || null,
-      status: "pending",
+      // Reviews publish immediately; an admin can still reject one afterwards.
+      status: "approved",
     },
   });
 

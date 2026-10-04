@@ -1,4 +1,4 @@
-# LINKY — Link Safety & Fraud Scanner
+# LINKY: Link Safety & Fraud Scanner
 
 LINKY checks a URL against domain, URL-structure, redirect and reputation signals and explains
 the result in plain language. It never claims to guarantee that a site is safe.
@@ -27,10 +27,10 @@ Open http://localhost:3000.
 
 See `.env.example`. Everything except `DATABASE_URL` is optional:
 
-- `ADMIN_PASSWORD` / `SESSION_SECRET` — required to sign in at `/admin`.
-- `GOOGLE_SAFE_BROWSING_API_KEY`, `VIRUSTOTAL_API_KEY` — reputation providers. Without a key, LINKY
+- `ADMIN_PASSWORD` / `SESSION_SECRET`, required to sign in at `/admin`.
+- `GOOGLE_SAFE_BROWSING_API_KEY`, `VIRUSTOTAL_API_KEY`, reputation providers. Without a key, LINKY
   clearly reports that provider as "Not available" rather than fabricating a result.
-- `RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MS` — in-memory rate limiting per client IP.
+- `RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MS`, in-memory rate limiting per client IP.
 
 ## Architecture
 
@@ -45,7 +45,7 @@ src/lib/
 
 `runScan()` in `src/lib/risk/engine.ts` is the single entry point: it runs domain analysis,
 redirect resolution and reputation checks in parallel, combines every signal into a weighted
-score (0–100), maps that score to a risk level (Safe / Low Risk / Suspicious / High Risk /
+score (0 to 100), maps that score to a risk level (Safe / Low Risk / Suspicious / High Risk /
 Malicious), and produces a short human-readable "why" list from the highest-weighted signals.
 
 ## Security notes
@@ -58,14 +58,14 @@ Malicious), and produces a short human-readable "why" list from the highest-weig
 - Scanning and review submission are both rate-limited per client IP.
 - The admin session is a signed, expiring cookie (HMAC-SHA256 with `SESSION_SECRET`), not a
   database-backed session, since there is a single admin role.
-- Anonymous scan history is tied to a random session cookie, not an account — no personal data is
+- Anonymous scan history is tied to a random session cookie, not an account, no personal data is
   collected to show a visitor their own history.
 
 ## Known limitations
 
 - The rate limiter is in-memory and per-instance; a multi-instance deployment needs a shared store
   (e.g. Redis) instead.
-- Domain age comes from the free, keyless RDAP network (`rdap.org`) and is best-effort — not every
+- Domain age comes from the free, keyless RDAP network (`rdap.org`) and is best-effort, not every
   TLD has an RDAP server, in which case age is reported as "Not available" rather than guessed.
 - Reputation checks depend on external provider keys. Without them, LINKY says so rather than
   inventing a verdict.

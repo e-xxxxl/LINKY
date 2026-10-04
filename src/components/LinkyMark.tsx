@@ -1,7 +1,7 @@
 import { Icon } from "./Icon";
 
 /** Matches the mark actually used in-context across every Stitch screen's
- * header (a black rounded-lg chip with a lime "link" glyph) — not the
+ * header (a black rounded-lg chip with a lime "link" glyph), not the
  * separate standalone wordmark explored in linky_logo/code.html, which
  * never appears on an actual app screen. */
 export function LinkyMark({ size = 32 }: { size?: number }) {

@@ -32,7 +32,7 @@ model Scan {
 model Review {
   id         String   @id @default(cuid())
   name       String
-  avatarUrl  String?
+  avatarSeed String?  @map("avatarUrl") // seed for the generated bubblehead avatar
   rating     Int
   reviewText String
   reason     String?

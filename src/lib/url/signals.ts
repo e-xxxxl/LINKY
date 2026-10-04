@@ -14,7 +14,7 @@ export function buildUrlStructureSignals(url: URL, registrableDomain: string): S
   const fullUrl = url.toString();
   const host = url.hostname;
 
-  // Credentials embedded before the host ("@" trick), e.g. real-bank.com@evil.com —
+  // Credentials embedded before the host ("@" trick), e.g. real-bank.com@evil.com,
   // the WHATWG URL parser treats everything before the last "@" as userinfo.
   if (url.username || url.password) {
     signals.push({
@@ -83,7 +83,7 @@ export function buildUrlStructureSignals(url: URL, registrableDomain: string): S
     signals.push(pass("encoded-characters", "Minimal character encoding", "The link does not rely on heavy character encoding."));
   }
 
-  // Checked on the path/query only, not the hostname — legitimate financial
+  // Checked on the path/query only, not the hostname, legitimate financial
   // and account-related brands naturally contain these words in their own
   // domain name, whereas phishing pages typically stuff them into the path
   // of an unrelated or lookalike domain.

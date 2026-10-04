@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Design tokens — extracted from stitch_linky_url_safety_scanner
+   Design tokens, extracted from stitch_linky_url_safety_scanner
    (neo_brutalist_tech_agency concept: linky_home, linky_scanning,
    scan_report_high_risk_2, scan_report_safe_2, linky_logo).
    Values taken from the shipped code.html tailwind.config, not the
-   DESIGN.md prose doc — the two disagree on radius scale; code.html is
+   DESIGN.md prose doc, the two disagree on radius scale; code.html is
    what was actually rendered in screen.png, so it's the source of truth.
    ========================================================================== */
 @theme {
@@ -31,14 +31,14 @@
   --color-lime-ink: #161f00; /* on-secondary-fixed */
   --color-lime-deep: #4f6600; /* secondary */
 
-  /* Risk / verdict (not in the Tailwind config block — pulled from the
+  /* Risk / verdict (not in the Tailwind config block, pulled from the
      literal hex values used inline across the two scan-report screens) */
   --color-risk-safe: #1e8e3e;
   --color-risk-caution: #d98a00;
   --color-risk-danger: #ba1a1a; /* "error" in the source config */
   --color-risk-danger-tint: #ffdad6;
 
-  /* Radius — from code.html's tailwind.config.borderRadius, 4 / 8 / 12 / full */
+  /* Radius, from code.html's tailwind.config.borderRadius, 4 / 8 / 12 / full */
   --radius-md: 0.25rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
@@ -55,7 +55,7 @@
   --font-display: var(--font-space-grotesk);
   --font-body: var(--font-inter);
 
-  /* Type scale — bundles size/line-height/tracking/weight per Tailwind v4's
+  /* Type scale, bundles size/line-height/tracking/weight per Tailwind v4's
      companion-variable convention, mirroring the fontSize tuples in the
      source tailwind.config exactly. */
   --text-display-lg: 3.5rem;
@@ -149,7 +149,7 @@ body {
   outline-offset: 2px;
 }
 
-/* Self-hosted rather than linked from fonts.googleapis.com — icons are used
+/* Self-hosted rather than linked from fonts.googleapis.com, icons are used
    on every screen, so a third-party font request that fails or is blocked
    would leave literal ligature text ("menu", "link", …) visible everywhere. */
 @font-face {

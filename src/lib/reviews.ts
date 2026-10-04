@@ -3,7 +3,7 @@ export type ReviewStatus = "pending" | "approved" | "rejected";
 export interface PublicReview {
   id: string;
   name: string;
-  avatarUrl: string | null;
+  avatarSeed: string | null;
   rating: number;
   reviewText: string;
   reason: string | null;

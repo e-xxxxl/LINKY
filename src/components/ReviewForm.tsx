@@ -1,16 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from "./Icon";
+import { BubbleAvatar } from "./BubbleAvatar";
+import { anonymousName, randomSeed } from "@/lib/avatar";
 
 export function ReviewForm() {
+  const router = useRouter();
+  const [seed, setSeed] = useState(() => randomSeed());
+  const [anonymous, setAnonymous] = useState(false);
   const [name, setName] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
   const [reason, setReason] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+
+  const shownName = anonymous ? anonymousName(seed) : name.trim() || "Your name";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -22,8 +29,9 @@ export function ReviewForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          avatarUrl: avatarUrl || undefined,
+          name: anonymous ? undefined : name,
+          anonymous,
+          avatarSeed: seed,
           rating,
           reviewText,
           reason: reason || undefined,
@@ -34,19 +42,20 @@ export function ReviewForm() {
 
       if (!res.ok) {
         setStatus("error");
-        setError(data?.error ?? "We couldn't submit your review. Please try again.");
+        setError(data?.error ?? "We couldn't post your review. Please try again.");
         return;
       }
 
       setStatus("success");
       setName("");
-      setAvatarUrl("");
       setRating(5);
       setReviewText("");
       setReason("");
+      setSeed(randomSeed());
+      router.refresh();
     } catch {
       setStatus("error");
-      setError("We couldn't submit your review. Please try again.");
+      setError("We couldn't post your review. Please try again.");
     }
   }
 
@@ -55,13 +64,10 @@ export function ReviewForm() {
       <div className="rounded-xl bg-surface-lowest p-space-md shadow-sm">
         <div className="flex items-center gap-2">
           <Icon name="check_circle" size={20} className="text-risk-safe" />
-          <p className="text-label-md font-semibold text-ink">Thanks for sharing your experience.</p>
+          <p className="text-label-md font-semibold text-ink">Thanks! Your review is live.</p>
         </div>
-        <p className="mt-1 text-body-sm text-ink-muted">
-          Your review is pending moderation and will appear on the review wall once approved.
-        </p>
         <button type="button" onClick={() => setStatus("idle")} className="mt-3 text-label-md font-semibold text-black underline underline-offset-2">
-          Submit another review
+          Write another review
         </button>
       </div>
     );
@@ -69,33 +75,49 @@ export function ReviewForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-space-md rounded-xl bg-surface-lowest p-space-md shadow-sm">
-      <div>
-        <label htmlFor="review-name" className="mb-1.5 block text-label-md text-ink-muted">
-          Name
-        </label>
-        <input
-          id="review-name"
-          required
-          minLength={2}
-          maxLength={60}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="h-12 w-full rounded-lg border border-line bg-surface px-3.5 text-body-sm text-ink focus:border-black focus:outline-none"
-        />
+      <div className="flex items-center gap-space-md">
+        <BubbleAvatar seed={seed} size={72} />
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <span className="truncate font-display text-title-md text-black">{shownName}</span>
+          <button
+            type="button"
+            onClick={() => setSeed(randomSeed())}
+            className="inline-flex w-fit items-center gap-1.5 rounded-full bg-surface-high px-3 py-1.5 text-label-sm text-ink transition-transform active:scale-95"
+            style={{ boxShadow: "1.5px 1.5px 0px #1c1b1b" }}
+          >
+            <Icon name="casino" size={16} />
+            Shuffle character
+          </button>
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="review-avatar" className="mb-1.5 block text-label-md text-ink-muted">
-          Avatar URL <span className="font-normal text-ink-faint">(optional)</span>
-        </label>
+      <label className="flex cursor-pointer items-center gap-3">
         <input
-          id="review-avatar"
-          type="url"
-          value={avatarUrl}
-          onChange={(e) => setAvatarUrl(e.target.value)}
-          className="h-12 w-full rounded-lg border border-line bg-surface px-3.5 text-body-sm text-ink focus:border-black focus:outline-none"
+          type="checkbox"
+          checked={anonymous}
+          onChange={(e) => setAnonymous(e.target.checked)}
+          className="h-5 w-5 shrink-0 accent-black"
         />
-      </div>
+        <span className="text-body-sm text-ink">
+          Stay anonymous <span className="text-ink-faint">(we&rsquo;ll give you a fun alias)</span>
+        </span>
+      </label>
+
+      {!anonymous && (
+        <div>
+          <label htmlFor="review-name" className="mb-1.5 block text-label-md text-ink-muted">
+            Name
+          </label>
+          <input
+            id="review-name"
+            required
+            maxLength={40}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="h-12 w-full rounded-lg border border-line bg-surface px-3.5 text-body-sm text-ink focus:border-black focus:outline-none"
+          />
+        </div>
+      )}
 
       <fieldset>
         <legend className="mb-1.5 block text-label-md text-ink-muted">Rating</legend>
@@ -124,7 +146,6 @@ export function ReviewForm() {
         <textarea
           id="review-text"
           required
-          minLength={10}
           maxLength={600}
           rows={4}
           value={reviewText}
@@ -161,9 +182,8 @@ export function ReviewForm() {
         style={{ boxShadow: "3px 3px 0px #1c1b1b" }}
         className="flex h-12 w-full items-center justify-center rounded-xl bg-black text-label-lg text-white transition-transform active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-70"
       >
-        {status === "loading" ? "Submitting…" : "Submit review"}
+        {status === "loading" ? "Posting…" : "Post review"}
       </button>
-      <p className="text-label-sm text-ink-faint">Reviews are moderated before publishing and may be edited for length.</p>
     </form>
   );
 }

@@ -15,7 +15,7 @@ export async function GET() {
     reviews: reviews.map((r) => ({
       id: r.id,
       name: r.name,
-      avatarUrl: r.avatarUrl,
+      avatarSeed: r.avatarSeed,
       rating: r.rating,
       reviewText: r.reviewText,
       reason: r.reason,

@@ -31,7 +31,7 @@ export default async function HistoryPage() {
       <div className="flex flex-col gap-space-xs">
         <h1 className="font-display text-headline-md tracking-tight text-black">Scan history</h1>
         <p className="text-body-sm leading-relaxed text-ink-muted">
-          No account needed — this list is tied to your browser, not a profile.
+          No account needed. This list is tied to your browser, not a profile.
         </p>
       </div>
 

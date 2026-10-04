@@ -55,7 +55,7 @@ export function ScanResult({ report }: { report: ScanReport }) {
         await navigator.share({ title: `LINKY: ${RISK_LEVEL_LABEL[report.riskLevel]} report`, text });
         return;
       } catch {
-        // user dismissed the share sheet — fall through to clipboard
+        // user dismissed the share sheet, fall through to clipboard
       }
     }
     try {

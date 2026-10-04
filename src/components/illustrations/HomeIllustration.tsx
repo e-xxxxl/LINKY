@@ -1,5 +1,5 @@
 /** Ported verbatim (attribute names only converted to JSX casing) from
- * stitch_linky_url_safety_scanner/linky_home/code.html — the decorative
+ * stitch_linky_url_safety_scanner/linky_home/code.html, the decorative
  * shield + magnifying-glass mark under the hero scanner. */
 export function HomeIllustration() {
   return (

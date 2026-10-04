@@ -15,7 +15,7 @@ export function ScannerForm() {
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  // Simulated progress while the real request is in flight — the same
+  // Simulated progress while the real request is in flight, the same
   // "climb toward ~94%, snap to 100% on completion" pattern as the
   // source mock's own script, since actual scan progress isn't
   // something the server reports incrementally.
@@ -99,7 +99,7 @@ export function ScannerForm() {
             <ScanningIllustration />
             <h2 className="font-display text-headline-md tracking-tight text-black">Scanning link…</h2>
             <p className="mb-space-xl mt-2 max-w-[240px] text-body-md leading-relaxed text-ink-muted">
-              Processing results — won&rsquo;t take a second
+              Processing results, won&rsquo;t take a second
             </p>
             <div className="h-2.5 w-full rounded-full bg-near-black p-0.5 shadow-inner">
               <div

@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const report = await getScan(id);
   if (!report) return { title: "Scan not found" };
 
-  const title = `${RISK_LEVEL_LABEL[report.riskLevel]} — Scan Report`;
+  const title = `${RISK_LEVEL_LABEL[report.riskLevel]} scan report`;
   return {
     title,
     description: report.summary,
