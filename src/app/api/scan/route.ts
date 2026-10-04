@@ -4,17 +4,25 @@ import { runScan } from "@/lib/risk/engine";
 import { prisma } from "@/lib/db";
 import { getOrCreateSessionId } from "@/lib/session";
 import { checkRateLimit, getClientKey } from "@/lib/rateLimit";
+import { consumeScanQuota, SCAN_LIMIT } from "@/lib/scanQuota";
 import { scanRequestSchema } from "@/lib/validation";
 
 // A scan can chain DNS, up to 5 redirect hops, RDAP and reputation lookups.
 export const maxDuration = 30;
 
+function waitText(ms: number): string {
+  const minutes = Math.max(1, Math.ceil(ms / 60000));
+  return minutes === 1 ? "about a minute" : `about ${minutes} minutes`;
+}
+
 export async function POST(request: Request) {
   const clientKey = getClientKey(request.headers);
-  const rateLimit = checkRateLimit(`scan:${clientKey}`);
-  if (!rateLimit.allowed) {
+
+  // Cheap per-instance guard against rapid-fire requests.
+  const burst = checkRateLimit(`scan:${clientKey}`);
+  if (!burst.allowed) {
     return NextResponse.json(
-      { error: "You've reached the scan limit. Please wait a moment and try again." },
+      { error: "You're scanning too quickly. Please wait a moment and try again." },
       { status: 429 },
     );
   }
@@ -34,6 +42,18 @@ export async function POST(request: Request) {
   const normalized = normalizeUrl(parsedBody.data.url);
   if (!normalized.ok || !normalized.url) {
     return NextResponse.json({ error: normalized.error }, { status: 400 });
+  }
+
+  // Invalid input above never uses up quota; only real scan attempts do.
+  const quota = await consumeScanQuota(clientKey);
+  if (!quota.allowed) {
+    return NextResponse.json(
+      {
+        error: `You've used your ${SCAN_LIMIT} free scans for this hour. You can scan again in ${waitText(quota.retryAfterMs)}.`,
+        retryAfterSeconds: Math.ceil(quota.retryAfterMs / 1000),
+      },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(quota.retryAfterMs / 1000)) } },
+    );
   }
 
   let result;

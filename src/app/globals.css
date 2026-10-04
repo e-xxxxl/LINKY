@@ -149,15 +149,14 @@ body {
   outline-offset: 2px;
 }
 
-/* Self-hosted rather than linked from fonts.googleapis.com, icons are used
-   on every screen, so a third-party font request that fails or is blocked
-   would leave literal ligature text ("menu", "link", …) visible everywhere. */
+/* Self-hosted subset (about 4 KB) containing only the icons this app uses,
+   preloaded in the layout. If you add an icon, regenerate the subset. */
 @font-face {
   font-family: "Material Symbols Outlined";
   font-style: normal;
-  font-weight: 100 700;
+  font-weight: 400;
   font-display: block;
-  src: url("/fonts/material-symbols-outlined.woff2") format("woff2");
+  src: url("/fonts/material-symbols-subset.woff2") format("woff2");
 }
 
 .material-symbols-outlined {
@@ -168,11 +167,22 @@ body {
   letter-spacing: normal;
   text-transform: none;
   display: inline-block;
+  /* Fixed square box so the ligature name (e.g. "content_paste") can never
+     widen the layout or peek out before the font is ready. */
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
   -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
+}
+
+/* Icons stay invisible until the icon font has loaded (set by the inline
+   script in the root layout), so the fallback text is never shown. */
+html:not(.icons-ready) .material-symbols-outlined {
+  visibility: hidden;
 }
 
 .pb-safe {

@@ -42,3 +42,13 @@ model Review {
 
   @@index([status])
 }
+
+// One row per scan request, keyed by a salted hash of the visitor's IP.
+// Used to enforce the hourly scan quota across all serverless instances.
+model RateHit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+}

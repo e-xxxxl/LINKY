@@ -88,7 +88,19 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} h-full`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} h-full`} suppressHydrationWarning>
+      <head>
+        <link rel="preload" href="/fonts/material-symbols-subset.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){var d=document.documentElement;function s(){d.classList.add('icons-ready')}try{document.fonts.load('24px \"Material Symbols Outlined\"','link').then(s)}catch(e){s()}})();",
+          }}
+        />
+        <noscript>
+          <style>{".material-symbols-outlined{visibility:visible!important}"}</style>
+        </noscript>
+      </head>
       <body className="min-h-full flex flex-col antialiased">
         {children}
         <ServiceWorkerRegister />
